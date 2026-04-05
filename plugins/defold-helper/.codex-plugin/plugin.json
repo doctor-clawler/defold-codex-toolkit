@@ -1,0 +1,37 @@
+{
+  "name": "defold-helper",
+  "version": "0.1.0",
+  "description": "Defold-specific workflow guidance and latest-doc lookup helpers for Codex.",
+  "author": {
+    "name": "clawler"
+  },
+  "homepage": "https://defold.com/",
+  "license": "MIT",
+  "keywords": [
+    "defold",
+    "lua",
+    "game-dev",
+    "input",
+    "gui"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Defold Helper",
+    "shortDescription": "Defold-safe workflow guidance for Codex",
+    "longDescription": "Packages a Defold-specific implementation skill and a lightweight latest-doc helper so Codex can inspect input focus, GUI/world separation, modal routing, and engine APIs with less guesswork.",
+    "developerName": "clawler",
+    "category": "Coding",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://defold.com/",
+    "defaultPrompt": [
+      "Audit this Defold input flow for focus and consumption bugs",
+      "Implement this Defold GUI interaction without mixing coordinate spaces",
+      "Check whether this Defold API usage is valid before we edit code"
+    ],
+    "brandColor": "#0B7285",
+    "screenshots": []
+  }
+}
