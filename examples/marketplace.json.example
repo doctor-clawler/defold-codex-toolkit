@@ -1,14 +1,14 @@
 {
-  "name": "clawler-defold-marketplace",
+  "name": "example-project-marketplace",
   "interface": {
-    "displayName": "Clawler Defold Marketplace"
+    "displayName": "Example Project Marketplace"
   },
   "plugins": [
     {
-      "name": "defold-helper",
+      "name": "defold-codex-toolkit",
       "source": {
         "source": "local",
-        "path": "./plugins/defold-helper"
+        "path": "./plugins/defold-codex-toolkit"
       },
       "policy": {
         "installation": "AVAILABLE",
