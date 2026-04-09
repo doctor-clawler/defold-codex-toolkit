@@ -9,11 +9,31 @@
 ## 제공 기능
 
 - Defold 빌드 및 번들 작업 가이드
+- Slack `/build` 연동용 Android build/upload 스크립트 규약
 - Defold GUI 및 입력 처리 가이드
 - Defold 디버깅 워크플로우 가이드
 - Defold 프로젝트 컨벤션 점검 가이드
 
 각 항목은 `skills/` 하위 `SKILL.md`로 제공됩니다.
+
+## Shared `/build` Contract
+
+이 plugin은 `_ops` 같은 공유 Slack daemon이 Defold 프로젝트 루트에서 표준 build script를 찾아 실행하는 워크플로우를 전제로 합니다.
+
+- 표준 진입 스크립트: `scripts/build_and_upload_android.sh`
+- 권장 분리 스크립트:
+  - `scripts/build_android.sh`
+  - `scripts/upload_android_build_to_slack.sh`
+- 권장 산출물 경로: `.local/artifacts/<project-slug>-android.apk`
+
+기본 운영 모델은 다음과 같습니다.
+
+1. Slack `/build`가 현재 active project root를 찾습니다.
+2. `<project>/scripts/build_and_upload_android.sh`가 있으면 그 스크립트를 실행합니다.
+3. 스크립트가 없으면 daemon은 `빌드 스크립트가 없습니다.`를 반환합니다.
+4. 스크립트 자체가 Android build와 Slack 업로드를 모두 책임집니다.
+
+이 계약을 따르면 새로운 Defold 프로젝트도 `_ops` 쪽에 프로젝트별 artifact branch를 추가하지 않고 같은 `/build` 표면을 재사용할 수 있습니다.
 
 ## 디렉터리 구조 설명
 
@@ -84,6 +104,8 @@ git clone https://github.com/doctor-clawler/defold-codex-toolkit.git defold-code
 ## Codex에서 사용되는 방식 설명
 
 Codex는 호스트 프로젝트의 `.agents/plugins/marketplace.json`에 등록된 plugin path를 통해 `defold-codex-toolkit`의 `.codex-plugin/plugin.json`을 읽고, `skills/` 아래 `SKILL.md` 파일을 탐색합니다. 즉, Codex는 원격 GitHub URL을 직접 설치하는 것이 아니라 로컬 경로를 참조해서 plugin을 로드합니다.
+
+`defold-build-bundle` skill은 위 Shared `/build` Contract를 따르는 Android build/upload 스크립트를 프로젝트에 정착시키는 지침으로도 사용됩니다.
 
 ## 주의사항 / 제한사항
 
