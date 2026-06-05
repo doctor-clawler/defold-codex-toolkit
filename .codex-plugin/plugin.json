@@ -1,7 +1,7 @@
 {
   "name": "defold-codex-toolkit",
   "version": "0.1.0",
-  "description": "Defold-specific Codex workflow toolkit for build, UI/input, debugging, and project conventions.",
+  "description": "Defold-specific Codex workflow toolkit for build, UI/input, UI text/fonts, debugging, and project conventions.",
   "author": {
     "name": "clawler"
   },
@@ -17,7 +17,7 @@
   "interface": {
     "displayName": "Defold Codex Toolkit",
     "shortDescription": "Defold-only workflow skills for Codex",
-    "longDescription": "Provides narrowly scoped Defold workflow skills for builds, GUI and input work, debugging, and project convention checks in Codex-driven repositories.",
+    "longDescription": "Provides narrowly scoped Defold workflow skills for builds, GUI and input work, UI text/font coverage, debugging, and project convention checks in Codex-driven repositories.",
     "developerName": "clawler",
     "category": "Coding",
     "capabilities": [
@@ -26,6 +26,7 @@
     ],
     "defaultPrompt": [
       "Audit this Defold input flow for focus and modal routing bugs",
+      "Check this Defold HUD text for missing glyph or font coverage risks",
       "Check whether this Defold build or bundle setup matches the local project",
       "Review this Defold project structure before editing gameplay or GUI code"
     ],

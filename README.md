@@ -11,10 +11,13 @@
 - Defold 빌드 및 번들 작업 가이드
 - Slack `/build` 연동용 Android build/upload 스크립트 규약
 - Defold GUI 및 입력 처리 가이드
+- Defold GUI 텍스트, 폰트, 글리프 커버리지 점검 가이드
 - Defold 디버깅 워크플로우 가이드
 - Defold 프로젝트 컨벤션 점검 가이드
 
 각 항목은 `skills/` 하위 `SKILL.md`로 제공됩니다.
+
+최신 Defold 문서 확인이 필요한 작업에서는 공식 LLM용 문서 인덱스인 `https://defold.com/llms.txt`를 우선 진입점으로 사용합니다.
 
 ## Shared `/build` Contract
 
@@ -42,6 +45,7 @@
 skills/
   defold-build-bundle/SKILL.md
   defold-ui-input/SKILL.md
+  defold-ui-text-fonts/SKILL.md
   defold-debug-workflow/SKILL.md
   defold-project-conventions/SKILL.md
 examples/marketplace.json.example

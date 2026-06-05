@@ -15,6 +15,7 @@ Use this skill only for Defold build pipeline work. If the request is about game
 - identify target platform, variant, and build entry (`project.main_collection`, archive target, bundle profile)
 - inspect existing CI scripts before suggesting any changes
 - verify whether the task needs editor-only build steps or command-line or headless flow
+- if the Defold Editor is running and `.internal/editor.port` exists, use the editor build endpoint as a separate compile check before or alongside platform bundles
 
 ## Operating Procedure
 
@@ -24,6 +25,8 @@ Use this skill only for Defold build pipeline work. If the request is about game
 - when adding automation, include clear path and artifact output expectations (`bundle`, `build`, `artifacts`, and related outputs)
 - prefer existing repo conventions for naming and directory layouts
 - when wiring Slack `/build`, prefer the shared contract below instead of inventing a project-specific command surface
+- when the running editor exposes `http://127.0.0.1:<PORT>/openapi.json`, inspect it before relying on hard-coded editor HTTP endpoint assumptions
+- for editor-resolved compile issues, run `curl -X POST "http://127.0.0.1:$(cat .internal/editor.port)/command/build"` and inspect the returned `success` and `issues`; do not treat this as a replacement for platform-specific bundle/export validation
 
 ## Shared Slack `/build` Contract
 
@@ -59,3 +62,4 @@ Recommended composition:
 - no invented Defold build flags or lifecycle behavior is introduced
 - the change set is minimal and scoped to build or bundle responsibilities
 - shared `/build` projects use the standard script paths so the daemon can discover them without per-project code
+- if the editor build endpoint is used, the reported result includes the JSON `success` value and any `issues`
