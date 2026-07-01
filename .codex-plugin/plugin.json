@@ -1,6 +1,6 @@
 {
   "name": "defold-codex-toolkit",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Defold-specific Codex workflow toolkit for build, UI/input, UI text/fonts, debugging, and project conventions.",
   "author": {
     "name": "clawler"

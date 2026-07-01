@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>Label</key>
+    <string>com.doctorclawler.defold-codex-toolkit.latest-check</string>
+    <key>ProgramArguments</key>
+    <array>
+      <string>/bin/zsh</string>
+      <string>__PROJECT_ROOT__/scripts/run-latest-check.sh</string>
+    </array>
+    <key>EnvironmentVariables</key>
+    <dict>
+      <key>DEFOLD_TOOLKIT_REPO</key>
+      <string>__PROJECT_ROOT__</string>
+      <key>DEFOLD_TOOLKIT_SLACK_CHANNEL</key>
+      <string>C0ARH1MHF4H</string>
+    </dict>
+    <key>StartCalendarInterval</key>
+    <dict>
+      <key>Hour</key>
+      <integer>9</integer>
+      <key>Minute</key>
+      <integer>0</integer>
+    </dict>
+    <key>RunAtLoad</key>
+    <false/>
+    <key>StandardOutPath</key>
+    <string>__HOME__/Library/Logs/defold-codex-toolkit/launchd.stdout.log</string>
+    <key>StandardErrorPath</key>
+    <string>__HOME__/Library/Logs/defold-codex-toolkit/launchd.stderr.log</string>
+  </dict>
+</plist>

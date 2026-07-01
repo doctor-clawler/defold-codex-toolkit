@@ -63,6 +63,35 @@ git clone https://github.com/doctor-clawler/defold-codex-toolkit.git defold-code
 
 2. 또는 GitHub URL을 직접 설치 대상으로 쓰는 것이 아니라, 클론하거나 복사한 로컬 저장소를 사용합니다.
 
+## 최신 버전 자동 갱신
+
+이 저장소 자체를 최신 상태로 유지하려면 `origin/main`을 최신 버전 기준으로 봅니다. 자동 체크 스크립트는 매일 한 번 원격을 fetch하고, 로컬 브랜치가 원격보다 뒤처져 있을 때만 `git merge --ff-only origin/main`으로 갱신합니다.
+
+- 기본 실행 스크립트: `scripts/check_latest_and_update.py`
+- launchd 래퍼: `scripts/run-latest-check.sh`
+- launchd 설치 스크립트: `scripts/install-latest-check-launchd.sh`
+- 기본 스케줄: 매일 `09:00` 로컬 시간
+- Slack 알림 채널: `C0ARH1MHF4H`
+- 로그 경로: `~/Library/Logs/defold-codex-toolkit/`
+
+동작 정책은 다음과 같습니다.
+
+1. 원격 최신 commit이 없으면 Slack에 아무 메시지도 보내지 않습니다.
+2. 원격 최신 commit이 있으면 fast-forward 갱신 후 패치 노트와 변경 파일 요약을 Slack에 보냅니다.
+3. 로컬 브랜치가 원격과 diverge 되었거나 working tree가 dirty이면 자동 병합하지 않고 로그에 실패를 남깁니다.
+
+수동 실행:
+
+```bash
+python3 scripts/check_latest_and_update.py --no-notify
+```
+
+스케줄 설치 또는 갱신:
+
+```bash
+scripts/install-latest-check-launchd.sh
+```
+
 ## 프로젝트 한정 사용 방법
 
 다른 프로젝트에서 plugin을 붙여 쓰려면 다음 순서를 따릅니다.
