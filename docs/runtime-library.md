@@ -6,6 +6,7 @@
 - `defold_helper.score_ui`
 - `defold_helper.game_over_ui`
 - `defold_helper.gameplay_layer`
+- `defold_helper.local_leaderboard`
 - `defold_helper.localization`
 
 ## Defold Adoption
@@ -29,6 +30,7 @@ After changing dependencies, run `Project > Fetch Libraries` in the Defold edito
 ```lua
 local score_records = require("defold_helper.score_records")
 local score_ui = require("defold_helper.score_ui")
+local local_leaderboard = require("defold_helper.local_leaderboard")
 ```
 
 Use a release tag or pinned commit archive for production projects. A branch archive is useful for quick smoke checks but can change underneath a consumer.
@@ -82,4 +84,37 @@ print(bundle:text("ui.title", "ko"))
 
 The helper intentionally does not own a global language setting for the whole game. Keep save data, settings UI, and language switching policy in the consuming project.
 
-The helper modules should not depend on a specific game name, score unit, GUI file, leaderboard backend, or advertising provider.
+## Local Leaderboard Adapter
+
+`defold_helper.local_leaderboard` owns small local leaderboard operations: row normalization, score/time sorting, run insertion, best-score promotion, limited row copying, and compact `MM:SS` display formatting.
+
+Keep game-specific labels and character names in a project adapter:
+
+```lua
+local leaderboard = require("defold_helper.local_leaderboard")
+
+local M = {}
+
+function M.record_run(rows, run)
+  return leaderboard.record_run(rows, run, {
+    limit = 10,
+    default_character_id = "classic",
+  })
+end
+
+function M.format_rows(rows)
+  return leaderboard.format_rows(rows, {
+    limit = 5,
+    empty_text = "No runs yet",
+    character_name = function(character_id)
+      return character_id
+    end,
+  })
+end
+
+return M
+```
+
+The helper does not persist leaderboard rows or own player identity. Save files, character display names, remote leaderboard sync, and GUI node binding stay in the consuming project.
+
+The helper modules should not depend on a specific game name, score unit, GUI file, leaderboard backend, character catalog, or advertising provider.

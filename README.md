@@ -50,6 +50,7 @@ defold_helper/
   score_ui.lua
   game_over_ui.lua
   gameplay_layer.lua
+  local_leaderboard.lua
   localization.lua
 skills/
   defold-build-bundle/SKILL.md
@@ -78,6 +79,7 @@ dependencies#0 = https://github.com/doctor-clawler/defold-codex-toolkit/archive/
 ```lua
 local score_records = require("defold_helper.score_records")
 local score_ui = require("defold_helper.score_ui")
+local local_leaderboard = require("defold_helper.local_leaderboard")
 local localization = require("defold_helper.localization")
 ```
 
