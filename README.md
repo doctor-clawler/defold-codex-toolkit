@@ -14,6 +14,7 @@
 - Defold GUI 텍스트, 폰트, 글리프 커버리지 점검 가이드
 - Defold 디버깅 워크플로우 가이드
 - Defold 프로젝트 컨벤션 점검 가이드
+- Defold 프로젝트가 dependency로 가져다 쓸 수 있는 `defold_helper/` Lua runtime helper
 
 각 항목은 `skills/` 하위 `SKILL.md`로 제공됩니다.
 
@@ -42,6 +43,12 @@
 
 ```text
 .codex-plugin/plugin.json
+game.project
+defold_helper/
+  score_records.lua
+  score_ui.lua
+  game_over_ui.lua
+  gameplay_layer.lua
 skills/
   defold-build-bundle/SKILL.md
   defold-ui-input/SKILL.md
@@ -52,6 +59,26 @@ examples/marketplace.json.example
 README.md
 LICENSE
 ```
+
+## Defold runtime library
+
+이 저장소는 Codex skill package이면서 Defold library project이기도 합니다. `game.project`의 `[library] include_dirs = defold_helper` 설정으로 `defold_helper/` 폴더만 소비 프로젝트에 노출합니다.
+
+소비 프로젝트에서는 release tag나 고정 commit archive URL을 `game.project`의 `[project] dependencies`에 넣고 Defold Editor에서 `Project > Fetch Libraries`를 실행합니다.
+
+```ini
+[project]
+dependencies#0 = https://github.com/doctor-clawler/defold-codex-toolkit/archive/<commit-or-tag>.zip
+```
+
+코드에서는 project-local wrapper나 adapter가 helper namespace를 직접 require합니다.
+
+```lua
+local score_records = require("defold_helper.score_records")
+local score_ui = require("defold_helper.score_ui")
+```
+
+자세한 adapter 예시는 [`docs/runtime-library.md`](docs/runtime-library.md)에 있습니다.
 
 ## 설치 방법
 
