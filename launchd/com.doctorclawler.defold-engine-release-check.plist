@@ -3,18 +3,20 @@
 <plist version="1.0">
   <dict>
     <key>Label</key>
-    <string>com.doctorclawler.defold-codex-toolkit.latest-check</string>
+    <string>com.doctorclawler.defold-engine-release-check</string>
     <key>ProgramArguments</key>
     <array>
       <string>/bin/zsh</string>
-      <string>__PROJECT_ROOT__/scripts/run-latest-check.sh</string>
+      <string>__PROJECT_ROOT__/scripts/run-defold-engine-release-check.sh</string>
     </array>
     <key>EnvironmentVariables</key>
     <dict>
       <key>DEFOLD_TOOLKIT_REPO</key>
       <string>__PROJECT_ROOT__</string>
-      <key>DEFOLD_TOOLKIT_SLACK_CHANNEL</key>
+      <key>DEFOLD_ENGINE_RELEASE_SLACK_CHANNEL</key>
       <string>C0ARH1MHF4H</string>
+      <key>DEFOLD_ENGINE_RELEASE_STATE_PATH</key>
+      <string>__PROJECT_ROOT__/.local/state/defold-engine-release.json</string>
     </dict>
     <key>StartCalendarInterval</key>
     <dict>
@@ -23,13 +25,13 @@
       <key>Hour</key>
       <integer>9</integer>
       <key>Minute</key>
-      <integer>0</integer>
+      <integer>15</integer>
     </dict>
     <key>RunAtLoad</key>
     <false/>
     <key>StandardOutPath</key>
-    <string>__HOME__/Library/Logs/defold-codex-toolkit/launchd.stdout.log</string>
+    <string>__HOME__/Library/Logs/defold-codex-toolkit/engine-launchd.stdout.log</string>
     <key>StandardErrorPath</key>
-    <string>__HOME__/Library/Logs/defold-codex-toolkit/launchd.stderr.log</string>
+    <string>__HOME__/Library/Logs/defold-codex-toolkit/engine-launchd.stderr.log</string>
   </dict>
 </plist>

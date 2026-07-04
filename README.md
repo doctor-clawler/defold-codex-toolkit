@@ -13,6 +13,7 @@
 - Defold GUI 및 입력 처리 가이드
 - Defold GUI 텍스트, 폰트, 글리프 커버리지 점검 가이드
 - Defold 디버깅 워크플로우 가이드
+- Defold 엔진 릴리즈 확인 및 `defold_helper` 정합성 업그레이드 가이드
 - Defold 프로젝트 컨벤션 점검 가이드
 - Defold 프로젝트가 dependency로 가져다 쓸 수 있는 `defold_helper/` Lua runtime helper
 - CSV 기반 localization table helper
@@ -57,6 +58,7 @@ skills/
   defold-ui-input/SKILL.md
   defold-ui-text-fonts/SKILL.md
   defold-debug-workflow/SKILL.md
+  defold-engine-upgrade/SKILL.md
   defold-project-conventions/SKILL.md
 examples/marketplace.json.example
 README.md
@@ -95,14 +97,14 @@ git clone https://github.com/doctor-clawler/defold-codex-toolkit.git defold-code
 
 2. 또는 GitHub URL을 직접 설치 대상으로 쓰는 것이 아니라, 클론하거나 복사한 로컬 저장소를 사용합니다.
 
-## 최신 버전 자동 갱신
+## 주간 최신 버전 자동 갱신
 
-이 저장소 자체를 최신 상태로 유지하려면 `origin/main`을 최신 버전 기준으로 봅니다. 자동 체크 스크립트는 매일 한 번 원격을 fetch하고, 로컬 브랜치가 원격보다 뒤처져 있을 때만 `git merge --ff-only origin/main`으로 갱신합니다.
+이 저장소 자체를 최신 상태로 유지하려면 `origin/main`을 최신 버전 기준으로 봅니다. 자동 체크 스크립트는 매주 금요일 한 번 원격을 fetch하고, 로컬 브랜치가 원격보다 뒤처져 있을 때만 `git merge --ff-only origin/main`으로 갱신합니다.
 
 - 기본 실행 스크립트: `scripts/check_latest_and_update.py`
 - launchd 래퍼: `scripts/run-latest-check.sh`
 - launchd 설치 스크립트: `scripts/install-latest-check-launchd.sh`
-- 기본 스케줄: 매일 `09:00` 로컬 시간
+- 기본 스케줄: 매주 금요일 `09:00` 로컬 시간
 - Slack 알림 채널: `C0ARH1MHF4H`
 - 로그 경로: `~/Library/Logs/defold-codex-toolkit/`
 
@@ -123,6 +125,20 @@ python3 scripts/check_latest_and_update.py --no-notify
 ```bash
 scripts/install-latest-check-launchd.sh
 ```
+
+## Defold 엔진 릴리즈 체크
+
+Defold 엔진 최신 릴리즈는 별도 주간 job이 확인합니다.
+
+- 릴리즈 체크 스크립트: `scripts/check_defold_engine_release.py`
+- launchd 래퍼: `scripts/run-defold-engine-release-check.sh`
+- 기본 스케줄: 매주 금요일 `09:15` 로컬 시간
+- Slack 알림 채널: `C0ARH1MHF4H`
+- 상태 파일: `.local/state/defold-engine-release.json`
+
+첫 실행에서는 현재 최신 Defold 릴리즈를 baseline으로 저장하고 Slack 메시지를 보내지 않습니다. 이후 새 릴리즈가 감지되면 공식 release notes 요약과 `defold-engine-upgrade` 권장 절차를 Slack에 보냅니다.
+
+엔진 업그레이드는 프로젝트별로 수행합니다. `defold_helper`를 쓰는 프로젝트는 Defold Editor 또는 `bob.jar` 버전과 이 toolkit의 `defold_helper` dependency tag/commit을 함께 맞춰야 합니다. 즉, `defold_helper`는 Defold 엔진과 같은 패키지는 아니지만 업그레이드 검증 단위에서는 함께 정합성을 맞추는 대상으로 봅니다.
 
 ## 프로젝트 한정 사용 방법
 
