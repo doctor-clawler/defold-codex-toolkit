@@ -17,6 +17,8 @@ local function run()
 
   local docs = read_file("docs/runtime-library.md")
   assert.contains(docs, "require(\"defold_helper.score_records\")", "adoption docs should show score_records require path")
+  assert.contains(docs, "require(\"defold_helper.localization\")", "adoption docs should show localization require path")
+  assert.contains(docs, "key,en,ko", "adoption docs should document csv localization table shape")
   assert.contains(docs, "dependencies", "adoption docs should document Defold dependency configuration")
 end
 

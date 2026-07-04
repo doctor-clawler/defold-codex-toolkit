@@ -15,6 +15,7 @@
 - Defold 디버깅 워크플로우 가이드
 - Defold 프로젝트 컨벤션 점검 가이드
 - Defold 프로젝트가 dependency로 가져다 쓸 수 있는 `defold_helper/` Lua runtime helper
+- CSV 기반 localization table helper
 
 각 항목은 `skills/` 하위 `SKILL.md`로 제공됩니다.
 
@@ -49,6 +50,7 @@ defold_helper/
   score_ui.lua
   game_over_ui.lua
   gameplay_layer.lua
+  localization.lua
 skills/
   defold-build-bundle/SKILL.md
   defold-ui-input/SKILL.md
@@ -76,6 +78,7 @@ dependencies#0 = https://github.com/doctor-clawler/defold-codex-toolkit/archive/
 ```lua
 local score_records = require("defold_helper.score_records")
 local score_ui = require("defold_helper.score_ui")
+local localization = require("defold_helper.localization")
 ```
 
 자세한 adapter 예시는 [`docs/runtime-library.md`](docs/runtime-library.md)에 있습니다.

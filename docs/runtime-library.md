@@ -6,6 +6,7 @@
 - `defold_helper.score_ui`
 - `defold_helper.game_over_ui`
 - `defold_helper.gameplay_layer`
+- `defold_helper.localization`
 
 ## Defold Adoption
 
@@ -53,5 +54,32 @@ local state = score_records.load({
   fields = HEIGHT_FIELDS,
 })
 ```
+
+## Localization Tables
+
+`defold_helper.localization` loads simple CSV localization tables with a `key` column and one column per language. Optional metadata columns such as `comment` or columns starting with `#` are ignored.
+
+```csv
+key,en,ko,comment
+ui.title,Mini Survivor,미니 서바이버,shown on title screen
+ui.greeting,"Hello, {name}","안녕, {name}",supports placeholders
+```
+
+In a Defold game, list the CSV file as a custom resource and load it through a small project-local adapter:
+
+```lua
+local localization = require("defold_helper.localization")
+
+local bundle = localization.from_resource("/assets/localization.csv", {
+  sys = sys,
+  default_language = "en",
+  fallback_language = "en",
+})
+
+print(bundle:text("ui.greeting", { name = "Ada" }))
+print(bundle:text("ui.title", "ko"))
+```
+
+The helper intentionally does not own a global language setting for the whole game. Keep save data, settings UI, and language switching policy in the consuming project.
 
 The helper modules should not depend on a specific game name, score unit, GUI file, leaderboard backend, or advertising provider.

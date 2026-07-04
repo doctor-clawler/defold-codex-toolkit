@@ -5,11 +5,13 @@ local score_ui_test = require("tests.score_ui_test")
 local game_over_ui_test = require("tests.game_over_ui_test")
 local gameplay_layer_test = require("tests.gameplay_layer_test")
 local runtime_library_metadata_test = require("tests.runtime_library_metadata_test")
+local localization_test = require("tests.localization_test")
 
 score_records_test()
 score_ui_test()
 game_over_ui_test()
 gameplay_layer_test()
 runtime_library_metadata_test()
+localization_test()
 
 print("OK")
