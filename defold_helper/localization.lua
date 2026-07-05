@@ -2,6 +2,48 @@ local M = {}
 
 local DEFAULT_KEY_COLUMN = "key"
 local DEFAULT_FALLBACK_LANGUAGE = "en"
+local DEFAULT_LANGUAGES = {
+  "ko-KR",
+  "en",
+  "ja-JP",
+  "zh-CN",
+  "zh-TW",
+  "de-DE",
+  "fr-FR",
+  "es-419",
+  "es-ES",
+  "pt-BR",
+  "it-IT",
+  "ru-RU",
+  "tr-TR",
+  "pl-PL",
+  "th",
+  "id",
+  "vi",
+  "ar",
+  "hi-IN",
+  "nl-NL",
+}
+local LANGUAGE_ALIASES = {
+  ko = "ko-KR",
+  kr = "ko-KR",
+  ja = "ja-JP",
+  jp = "ja-JP",
+  zh = "zh-CN",
+  ["zh-Hans"] = "zh-CN",
+  ["zh-Hant"] = "zh-TW",
+  de = "de-DE",
+  fr = "fr-FR",
+  es = "es-ES",
+  ["es-LA"] = "es-419",
+  pt = "pt-BR",
+  it = "it-IT",
+  ru = "ru-RU",
+  tr = "tr-TR",
+  pl = "pl-PL",
+  hi = "hi-IN",
+  nl = "nl-NL",
+}
 local METADATA_COLUMNS = {
   comment = true,
   comments = true,
@@ -156,12 +198,40 @@ local function copy_array(values)
   return result
 end
 
+local function has_language(languages, language)
+  if type(languages) ~= "table" or type(language) ~= "string" or language == "" then
+    return false
+  end
+  for index = 1, #languages do
+    if languages[index] == language then
+      return true
+    end
+  end
+  return false
+end
+
+local function normalize_language_for(languages, language)
+  if type(language) ~= "string" or language == "" then
+    return language
+  end
+  if has_language(languages, language) then
+    return language
+  end
+  local alias = LANGUAGE_ALIASES[language]
+  if alias and has_language(languages, alias) then
+    return alias
+  end
+  return language
+end
+
 local function make_bundle(entries, languages, options)
+  local default_language = normalize_language_for(languages, options.default_language or languages[1] or DEFAULT_FALLBACK_LANGUAGE)
+  local fallback_language = normalize_language_for(languages, options.fallback_language or default_language or languages[1] or DEFAULT_FALLBACK_LANGUAGE)
   local bundle = {
     _entries = entries,
     _languages = languages,
-    _language = options.default_language or languages[1] or DEFAULT_FALLBACK_LANGUAGE,
-    _fallback_language = options.fallback_language or options.default_language or languages[1] or DEFAULT_FALLBACK_LANGUAGE,
+    _language = default_language,
+    _fallback_language = fallback_language,
   }
 
   function bundle:language()
@@ -170,7 +240,7 @@ local function make_bundle(entries, languages, options)
 
   function bundle:set_language(language)
     if type(language) == "string" and language ~= "" then
-      self._language = language
+      self._language = normalize_language_for(self._languages, language)
     end
     return self
   end
@@ -181,7 +251,7 @@ local function make_bundle(entries, languages, options)
 
   function bundle:set_fallback_language(language)
     if type(language) == "string" and language ~= "" then
-      self._fallback_language = language
+      self._fallback_language = normalize_language_for(self._languages, language)
     end
     return self
   end
@@ -195,14 +265,14 @@ local function make_bundle(entries, languages, options)
     if not entry then
       return false
     end
-    local value = entry[language or self._language]
+    local value = entry[normalize_language_for(self._languages, language or self._language)]
     return value ~= nil and value ~= ""
   end
 
   function bundle:text(key, language_or_params, params)
     local language = self._language
     if type(language_or_params) == "string" then
-      language = language_or_params
+      language = normalize_language_for(self._languages, language_or_params)
     elseif type(language_or_params) == "table" and params == nil then
       params = language_or_params
     end
@@ -228,10 +298,18 @@ local function make_bundle(entries, languages, options)
     if not entry then
       return nil
     end
-    return entry[language or self._language]
+    return entry[normalize_language_for(self._languages, language or self._language)]
   end
 
   return bundle
+end
+
+function M.default_languages()
+  return copy_array(DEFAULT_LANGUAGES)
+end
+
+function M.normalize_language(language, languages)
+  return normalize_language_for(languages or DEFAULT_LANGUAGES, language)
 end
 
 function M.parse_csv(text)

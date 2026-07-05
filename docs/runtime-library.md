@@ -65,10 +65,18 @@ local state = score_records.load({
 
 `defold_helper.localization` loads simple CSV localization tables with a `key` column and one column per language. Optional metadata columns such as `comment` or columns starting with `#` are ignored.
 
+Use `localization.default_languages()` when a project needs the shared default table shape. The default locale order is:
+
+```text
+ko-KR, en, ja-JP, zh-CN, zh-TW, de-DE, fr-FR, es-419, es-ES, pt-BR, it-IT, ru-RU, tr-TR, pl-PL, th, id, vi, ar, hi-IN, nl-NL
+```
+
+Short legacy codes such as `ko`, `ja`, `zh`, `de`, `fr`, `es`, `pt`, `it`, `ru`, `tr`, `pl`, `hi`, and `nl` normalize to the matching default locale only when that canonical locale column exists in the bundle. This keeps older `en,ko` tables working while allowing new tables to use canonical locale columns.
+
 ```csv
-key,en,ko,comment
-ui.title,Mini Survivor,미니 서바이버,shown on title screen
-ui.greeting,"Hello, {name}","안녕, {name}",supports placeholders
+key,ko-KR,en,ja-JP,zh-CN,zh-TW,de-DE,fr-FR,es-419,es-ES,pt-BR,it-IT,ru-RU,tr-TR,pl-PL,th,id,vi,ar,hi-IN,nl-NL,comment
+ui.title,미니 서바이버,Mini Survivor,Mini Survivor,Mini Survivor,Mini Survivor,Mini Survivor,Mini Survivor,Mini Survivor,Mini Survivor,Mini Survivor,Mini Survivor,Mini Survivor,Mini Survivor,Mini Survivor,Mini Survivor,Mini Survivor,Mini Survivor,Mini Survivor,Mini Survivor,Mini Survivor,shown on title screen
+ui.greeting,"안녕, {name}","Hello, {name}","Hello, {name}","Hello, {name}","Hello, {name}","Hello, {name}","Hello, {name}","Hello, {name}","Hello, {name}","Hello, {name}","Hello, {name}","Hello, {name}","Hello, {name}","Hello, {name}","Hello, {name}","Hello, {name}","Hello, {name}","Hello, {name}","Hello, {name}","Hello, {name}",supports placeholders
 ```
 
 In a Defold game, list the CSV file as a custom resource and load it through a small project-local adapter:
@@ -78,8 +86,9 @@ local localization = require("defold_helper.localization")
 
 local bundle = localization.from_resource("/assets/localization.csv", {
   sys = sys,
-  default_language = "en",
+  default_language = "ko-KR",
   fallback_language = "en",
+  languages = localization.default_languages(),
 })
 
 print(bundle:text("ui.greeting", { name = "Ada" }))

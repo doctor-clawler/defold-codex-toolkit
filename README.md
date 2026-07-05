@@ -16,7 +16,7 @@
 - Defold 엔진 릴리즈 확인 및 `defold_helper` 정합성 업그레이드 가이드
 - Defold 프로젝트 컨벤션 점검 가이드
 - Defold 프로젝트가 dependency로 가져다 쓸 수 있는 `defold_helper/` Lua runtime helper
-- CSV 기반 localization table helper
+- CSV 기반 localization table helper 및 기본 20개 locale 코드 목록
 - 재사용 가능한 privacy modal 상태/클릭 처리 helper
 - 재사용 가능한 bounded scroll 상태/드래그/휠/관성/탄성 layout helper
 
