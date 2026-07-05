@@ -18,7 +18,7 @@
 - Defold 프로젝트가 dependency로 가져다 쓸 수 있는 `defold_helper/` Lua runtime helper
 - CSV 기반 localization table helper
 - 재사용 가능한 privacy modal 상태/클릭 처리 helper
-- 재사용 가능한 bounded scroll 상태/드래그/휠 입력 helper
+- 재사용 가능한 bounded scroll 상태/드래그/휠/관성/탄성 layout helper
 
 각 항목은 `skills/` 하위 `SKILL.md`로 제공됩니다.
 

@@ -23,6 +23,8 @@ local function run()
   assert.contains(docs, "key,en,ko", "adoption docs should document csv localization table shape")
   assert.contains(docs, "privacy_modal.tap_action", "adoption docs should document privacy modal action routing")
   assert.contains(docs, "scroll.apply_wheel", "adoption docs should document wheel scrolling")
+  assert.contains(docs, "scroll.update", "adoption docs should document inertial scroll updates")
+  assert.contains(docs, "scroll.layout", "adoption docs should document reusable row layout")
   assert.contains(docs, "dependencies", "adoption docs should document Defold dependency configuration")
 end
 

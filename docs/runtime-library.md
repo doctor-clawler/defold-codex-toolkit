@@ -127,7 +127,7 @@ Keep project-specific legal copy in the consuming project, or feed it from `defo
 
 ## Scroll State Adapter
 
-`defold_helper.scroll` owns bounded scroll state, drag deltas, wheel steps, clamp behavior, and normalized scroll ratios. The consuming game still owns hit rectangles, GUI nodes, scrollbar colors, layout dimensions, and platform-specific input bindings.
+`defold_helper.scroll` owns bounded scroll state, drag deltas, wheel steps, clamp behavior, optional rubber-band overscroll, release velocity, inertial/spring updates, repeated-row layout math, and normalized scroll ratios. The consuming game still owns hit rectangles, GUI nodes, scrollbar colors, concrete row art, and platform-specific input bindings.
 
 ```lua
 local scroll = require("defold_helper.scroll")
@@ -136,14 +136,20 @@ local stats_scroll = scroll.create({
   min = 0,
   max = 500,
   wheel_step = 80,
+  overscroll_limit = 80,
+  overscroll_resistance = 0.35,
+  spring_stiffness = 150,
+  spring_damping = 15,
+  inertia_damping = 5.5,
+  max_velocity = 1450,
 })
 
-function on_pointer_pressed(y)
-  scroll.begin_drag(stats_scroll, y)
+function on_pointer_pressed(y, frame)
+  scroll.begin_drag(stats_scroll, y, { frame = frame })
 end
 
-function on_pointer_moved(y)
-  local changed = scroll.drag_to(stats_scroll, y)
+function on_pointer_moved(y, frame)
+  local changed = scroll.drag_to(stats_scroll, y, { frame = frame })
   if changed then
     redraw_stats(stats_scroll.offset)
   end
@@ -158,6 +164,34 @@ function on_mouse_wheel(direction)
   if changed then
     redraw_stats(stats_scroll.offset)
   end
+end
+
+function update(dt)
+  local changed = scroll.update(stats_scroll, dt)
+  if changed then
+    redraw_stats(stats_scroll.offset)
+  end
+end
+```
+
+Use `scroll.layout` when a fixed pool of GUI row nodes should represent a longer list without a visible row pop:
+
+```lua
+local layout = scroll.layout({
+  offset = stats_scroll.offset,
+  item_count = #items,
+  slot_count = #row_nodes,
+  row_spacing = 132,
+  top = 291,
+  min_y = -342,
+  max_y = 342,
+  slot_half_height = 63,
+})
+
+stats_scroll.max = layout.max_offset
+for _, row in ipairs(layout.slots) do
+  local item = row.visible and row.item_index and items[row.item_index]
+  position_row(row.slot_index, row.y, item)
 end
 ```
 
