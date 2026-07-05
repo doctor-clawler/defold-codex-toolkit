@@ -17,6 +17,7 @@
 - Defold 프로젝트 컨벤션 점검 가이드
 - Defold 프로젝트가 dependency로 가져다 쓸 수 있는 `defold_helper/` Lua runtime helper
 - CSV 기반 localization table helper
+- 재사용 가능한 privacy modal 상태/클릭 처리 helper
 
 각 항목은 `skills/` 하위 `SKILL.md`로 제공됩니다.
 
@@ -53,6 +54,7 @@ defold_helper/
   gameplay_layer.lua
   local_leaderboard.lua
   localization.lua
+  privacy_modal.lua
 skills/
   defold-build-bundle/SKILL.md
   defold-ui-input/SKILL.md
@@ -83,6 +85,7 @@ local score_records = require("defold_helper.score_records")
 local score_ui = require("defold_helper.score_ui")
 local local_leaderboard = require("defold_helper.local_leaderboard")
 local localization = require("defold_helper.localization")
+local privacy_modal = require("defold_helper.privacy_modal")
 ```
 
 자세한 adapter 예시는 [`docs/runtime-library.md`](docs/runtime-library.md)에 있습니다.

@@ -1,7 +1,7 @@
 {
   "name": "defold-codex-toolkit",
-  "version": "0.5.0",
-  "description": "Defold-specific Codex workflow toolkit and reusable runtime library for build, UI/input, UI text/fonts, debugging, project conventions, engine upgrades, portable Lua score/session helpers, local leaderboards, and CSV localization tables.",
+  "version": "0.5.1",
+  "description": "Defold-specific Codex workflow toolkit and reusable runtime library for build, UI/input, UI text/fonts, debugging, project conventions, engine upgrades, portable Lua score/session helpers, local leaderboards, CSV localization tables, and privacy modal routing.",
   "author": {
     "name": "clawler"
   },
@@ -17,7 +17,7 @@
   "interface": {
     "displayName": "Defold Codex Toolkit",
     "shortDescription": "Defold-only workflow skills for Codex",
-    "longDescription": "Provides narrowly scoped Defold workflow skills for builds, GUI and input work, UI text/font coverage, debugging, engine upgrades, and project convention checks, plus a Defold library namespace with portable Lua score, local leaderboard, result UI, session, and localization helpers.",
+    "longDescription": "Provides narrowly scoped Defold workflow skills for builds, GUI and input work, UI text/font coverage, debugging, engine upgrades, and project convention checks, plus a Defold library namespace with portable Lua score, local leaderboard, result UI, session, localization, and privacy modal helpers.",
     "developerName": "clawler",
     "category": "Coding",
     "capabilities": [

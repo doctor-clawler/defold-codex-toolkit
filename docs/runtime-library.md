@@ -8,6 +8,7 @@
 - `defold_helper.gameplay_layer`
 - `defold_helper.local_leaderboard`
 - `defold_helper.localization`
+- `defold_helper.privacy_modal`
 
 ## Defold Adoption
 
@@ -31,6 +32,7 @@ After changing dependencies, run `Project > Fetch Libraries` in the Defold edito
 local score_records = require("defold_helper.score_records")
 local score_ui = require("defold_helper.score_ui")
 local local_leaderboard = require("defold_helper.local_leaderboard")
+local privacy_modal = require("defold_helper.privacy_modal")
 ```
 
 Use a release tag or pinned commit archive for production projects. A branch archive is useful for quick smoke checks but can change underneath a consumer.
@@ -83,6 +85,43 @@ print(bundle:text("ui.title", "ko"))
 ```
 
 The helper intentionally does not own a global language setting for the whole game. Keep save data, settings UI, and language switching policy in the consuming project.
+
+## Privacy Modal Adapter
+
+`defold_helper.privacy_modal` owns reusable privacy-modal state, button hit fallback bounds, duplicate tap blocking, and open/close action routing. The consuming game still owns the actual `.gui` nodes, localized privacy text, visual styling, sound effects, and Play Console wording.
+
+```lua
+local privacy_modal = require("defold_helper.privacy_modal")
+
+local modal = privacy_modal.create({
+  lines = {
+    "No personal data is collected.",
+    "Local progress stays on this device.",
+  },
+  button_bounds = {
+    min_x = 470,
+    max_x = 625,
+    min_y = 970,
+    max_y = 1045,
+  },
+})
+
+local result = privacy_modal.tap_action(modal, {
+  frame = self.input_frame,
+  last_handled_frame = self.last_touch_press_frame,
+  x = x,
+  y = y,
+  button_hit = gui.pick_node(self.privacy_button, x, y),
+})
+
+if result.kind == privacy_modal.ACTIONS.OPEN then
+  gui.set_enabled(self.privacy_modal_node, true)
+elseif result.kind == privacy_modal.ACTIONS.CLOSE then
+  gui.set_enabled(self.privacy_modal_node, false)
+end
+```
+
+Keep project-specific legal copy in the consuming project, or feed it from `defold_helper.localization` through a local adapter. The helper should not include app names, policy claims, store URLs, or publisher contact data.
 
 ## Local Leaderboard Adapter
 
