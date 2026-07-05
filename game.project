@@ -1,6 +1,6 @@
 [project]
 title = Defold Helper Runtime
-version = 0.5.1
+version = 0.5.2
 
 [library]
 include_dirs = defold_helper

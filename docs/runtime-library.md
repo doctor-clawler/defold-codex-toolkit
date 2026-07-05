@@ -9,6 +9,7 @@
 - `defold_helper.local_leaderboard`
 - `defold_helper.localization`
 - `defold_helper.privacy_modal`
+- `defold_helper.scroll`
 
 ## Defold Adoption
 
@@ -33,6 +34,7 @@ local score_records = require("defold_helper.score_records")
 local score_ui = require("defold_helper.score_ui")
 local local_leaderboard = require("defold_helper.local_leaderboard")
 local privacy_modal = require("defold_helper.privacy_modal")
+local scroll = require("defold_helper.scroll")
 ```
 
 Use a release tag or pinned commit archive for production projects. A branch archive is useful for quick smoke checks but can change underneath a consumer.
@@ -122,6 +124,44 @@ end
 ```
 
 Keep project-specific legal copy in the consuming project, or feed it from `defold_helper.localization` through a local adapter. The helper should not include app names, policy claims, store URLs, or publisher contact data.
+
+## Scroll State Adapter
+
+`defold_helper.scroll` owns bounded scroll state, drag deltas, wheel steps, clamp behavior, and normalized scroll ratios. The consuming game still owns hit rectangles, GUI nodes, scrollbar colors, layout dimensions, and platform-specific input bindings.
+
+```lua
+local scroll = require("defold_helper.scroll")
+
+local stats_scroll = scroll.create({
+  min = 0,
+  max = 500,
+  wheel_step = 80,
+})
+
+function on_pointer_pressed(y)
+  scroll.begin_drag(stats_scroll, y)
+end
+
+function on_pointer_moved(y)
+  local changed = scroll.drag_to(stats_scroll, y)
+  if changed then
+    redraw_stats(stats_scroll.offset)
+  end
+end
+
+function on_pointer_released()
+  scroll.end_drag(stats_scroll)
+end
+
+function on_mouse_wheel(direction)
+  local changed = scroll.apply_wheel(stats_scroll, direction)
+  if changed then
+    redraw_stats(stats_scroll.offset)
+  end
+end
+```
+
+Map mouse-wheel or platform scroll events to `"up"` and `"down"` in the consuming project. The helper intentionally does not know about Defold GUI node ids, CSS-style scrollbars, touch areas, or visual style.
 
 ## Local Leaderboard Adapter
 
