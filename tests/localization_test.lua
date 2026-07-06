@@ -22,6 +22,28 @@ local EXPECTED_DEFAULT_LANGUAGES = {
   "hi-IN",
   "nl-NL",
 }
+local EXPECTED_DEFAULT_LANGUAGE_NAMES = {
+  ["ko-KR"] = "한국어",
+  en = "English",
+  ["ja-JP"] = "日本語",
+  ["zh-CN"] = "简体中文",
+  ["zh-TW"] = "繁體中文",
+  ["de-DE"] = "Deutsch",
+  ["fr-FR"] = "Français",
+  ["es-419"] = "Español LATAM",
+  ["es-ES"] = "Español",
+  ["pt-BR"] = "Português BR",
+  ["it-IT"] = "Italiano",
+  ["ru-RU"] = "Русский",
+  ["tr-TR"] = "Türkçe",
+  ["pl-PL"] = "Polski",
+  th = "ไทย",
+  id = "Bahasa Indonesia",
+  vi = "Tiếng Việt",
+  ar = "العربية",
+  ["hi-IN"] = "हिन्दी",
+  ["nl-NL"] = "Nederlands",
+}
 
 local function run()
   package.loaded["defold_helper.localization"] = nil
@@ -31,6 +53,21 @@ local function run()
   assert.equal(localization.normalize_language("ko"), "ko-KR", "legacy Korean language code should normalize to ko-KR")
   assert.equal(localization.normalize_language("ja"), "ja-JP", "short Japanese language code should normalize to ja-JP")
   assert.equal(localization.normalize_language("es-419"), "es-419", "regional Spanish language code should remain stable")
+
+  local variations = localization.default_language_variations()
+  assert.equal(#variations, #EXPECTED_DEFAULT_LANGUAGES, "default language variations should match the shared locale count")
+  assert.equal(table.concat(variations[1].aliases, ","), "ko,kr", "language variations should include legacy Korean aliases")
+  assert.equal(table.concat(variations[8].aliases, ","), "es-LA", "language variations should include regional Spanish aliases")
+  for index, language in ipairs(EXPECTED_DEFAULT_LANGUAGES) do
+    assert.equal(variations[index].code, language, "language variation order should match default languages")
+    assert.equal(variations[index].name, EXPECTED_DEFAULT_LANGUAGE_NAMES[language], "language variation should expose the fixed native display name")
+    assert.equal(localization.language_display_name(language), EXPECTED_DEFAULT_LANGUAGE_NAMES[language], "language display name should expose the fixed native display name")
+  end
+  assert.equal(localization.language_display_name("ko"), "한국어", "Korean alias should display as 한국어")
+  assert.equal(localization.language_display_name("ja"), "日本語", "Japanese alias should display as 日本語")
+  assert.equal(localization.language_display_name("bogus"), "bogus", "unknown languages should fall back to their normalized code")
+  variations[1].name = "Korean"
+  assert.equal(localization.language_display_name("ko-KR"), "한국어", "language variation copies should not mutate shared display names")
 
   local csv = table.concat({
     "key,en,ko,comment",
@@ -79,6 +116,15 @@ local function run()
   assert.equal(locale_bundle:text("ui.missing_japanese"), "English Value", "missing canonical locale value should use fallback language")
   assert.equal(locale_bundle:has("ui.title", "ja"), true, "has should normalize explicit language aliases")
   assert.equal(locale_bundle:raw("ui.title", "ko"), "미니 서바이버", "raw should normalize explicit language aliases")
+  assert.equal(locale_bundle:language_display_name("ko"), "한국어", "bundle should expose fixed language display names independent of selected language")
+  assert.equal(locale_bundle:language_display_name("ja"), "日本語", "bundle language display names should normalize aliases")
+  local bundle_variations = locale_bundle:language_variations()
+  assert.equal(#bundle_variations, 3, "bundle language variations should include only available languages")
+  assert.equal(bundle_variations[1].code, "ko-KR", "bundle language variations should preserve bundle language order")
+  assert.equal(bundle_variations[1].name, "한국어", "bundle language variations should expose native Korean name")
+  assert.equal(table.concat(bundle_variations[1].aliases, ","), "ko,kr", "bundle language variations should expose legacy Korean aliases")
+  assert.equal(bundle_variations[3].code, "ja-JP", "bundle language variations should normalize Japanese locale")
+  assert.equal(bundle_variations[3].name, "日本語", "bundle language variations should expose native Japanese name")
 
   local resource_sys = {
     load_resource = function(path)

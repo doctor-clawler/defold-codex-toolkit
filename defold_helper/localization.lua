@@ -24,6 +24,28 @@ local DEFAULT_LANGUAGES = {
   "hi-IN",
   "nl-NL",
 }
+local DEFAULT_LANGUAGE_DISPLAY_NAMES = {
+  ["ko-KR"] = "한국어",
+  en = "English",
+  ["ja-JP"] = "日本語",
+  ["zh-CN"] = "简体中文",
+  ["zh-TW"] = "繁體中文",
+  ["de-DE"] = "Deutsch",
+  ["fr-FR"] = "Français",
+  ["es-419"] = "Español LATAM",
+  ["es-ES"] = "Español",
+  ["pt-BR"] = "Português BR",
+  ["it-IT"] = "Italiano",
+  ["ru-RU"] = "Русский",
+  ["tr-TR"] = "Türkçe",
+  ["pl-PL"] = "Polski",
+  th = "ไทย",
+  id = "Bahasa Indonesia",
+  vi = "Tiếng Việt",
+  ar = "العربية",
+  ["hi-IN"] = "हिन्दी",
+  ["nl-NL"] = "Nederlands",
+}
 local LANGUAGE_ALIASES = {
   ko = "ko-KR",
   kr = "ko-KR",
@@ -44,6 +66,32 @@ local LANGUAGE_ALIASES = {
   hi = "hi-IN",
   nl = "nl-NL",
 }
+local DEFAULT_LANGUAGE_VARIATIONS = {
+  { code = "ko-KR", name = DEFAULT_LANGUAGE_DISPLAY_NAMES["ko-KR"], aliases = { "ko", "kr" } },
+  { code = "en", name = DEFAULT_LANGUAGE_DISPLAY_NAMES.en, aliases = {} },
+  { code = "ja-JP", name = DEFAULT_LANGUAGE_DISPLAY_NAMES["ja-JP"], aliases = { "ja", "jp" } },
+  { code = "zh-CN", name = DEFAULT_LANGUAGE_DISPLAY_NAMES["zh-CN"], aliases = { "zh", "zh-Hans" } },
+  { code = "zh-TW", name = DEFAULT_LANGUAGE_DISPLAY_NAMES["zh-TW"], aliases = { "zh-Hant" } },
+  { code = "de-DE", name = DEFAULT_LANGUAGE_DISPLAY_NAMES["de-DE"], aliases = { "de" } },
+  { code = "fr-FR", name = DEFAULT_LANGUAGE_DISPLAY_NAMES["fr-FR"], aliases = { "fr" } },
+  { code = "es-419", name = DEFAULT_LANGUAGE_DISPLAY_NAMES["es-419"], aliases = { "es-LA" } },
+  { code = "es-ES", name = DEFAULT_LANGUAGE_DISPLAY_NAMES["es-ES"], aliases = { "es" } },
+  { code = "pt-BR", name = DEFAULT_LANGUAGE_DISPLAY_NAMES["pt-BR"], aliases = { "pt" } },
+  { code = "it-IT", name = DEFAULT_LANGUAGE_DISPLAY_NAMES["it-IT"], aliases = { "it" } },
+  { code = "ru-RU", name = DEFAULT_LANGUAGE_DISPLAY_NAMES["ru-RU"], aliases = { "ru" } },
+  { code = "tr-TR", name = DEFAULT_LANGUAGE_DISPLAY_NAMES["tr-TR"], aliases = { "tr" } },
+  { code = "pl-PL", name = DEFAULT_LANGUAGE_DISPLAY_NAMES["pl-PL"], aliases = { "pl" } },
+  { code = "th", name = DEFAULT_LANGUAGE_DISPLAY_NAMES.th, aliases = {} },
+  { code = "id", name = DEFAULT_LANGUAGE_DISPLAY_NAMES.id, aliases = {} },
+  { code = "vi", name = DEFAULT_LANGUAGE_DISPLAY_NAMES.vi, aliases = {} },
+  { code = "ar", name = DEFAULT_LANGUAGE_DISPLAY_NAMES.ar, aliases = {} },
+  { code = "hi-IN", name = DEFAULT_LANGUAGE_DISPLAY_NAMES["hi-IN"], aliases = { "hi" } },
+  { code = "nl-NL", name = DEFAULT_LANGUAGE_DISPLAY_NAMES["nl-NL"], aliases = { "nl" } },
+}
+local DEFAULT_LANGUAGE_VARIATIONS_BY_CODE = {}
+for _, variation in ipairs(DEFAULT_LANGUAGE_VARIATIONS) do
+  DEFAULT_LANGUAGE_VARIATIONS_BY_CODE[variation.code] = variation
+end
 local METADATA_COLUMNS = {
   comment = true,
   comments = true,
@@ -198,6 +246,14 @@ local function copy_array(values)
   return result
 end
 
+local function copy_map(values)
+  local result = {}
+  for key, value in pairs(values) do
+    result[key] = value
+  end
+  return result
+end
+
 local function has_language(languages, language)
   if type(languages) ~= "table" or type(language) ~= "string" or language == "" then
     return false
@@ -222,6 +278,38 @@ local function normalize_language_for(languages, language)
     return alias
   end
   return language
+end
+
+local function language_display_name_for(languages, language)
+  local normalized = normalize_language_for(languages or DEFAULT_LANGUAGES, language)
+  return DEFAULT_LANGUAGE_DISPLAY_NAMES[normalized] or tostring(normalized or "")
+end
+
+local function language_variations_for(languages)
+  local result = {}
+  for index = 1, #languages do
+    local language = languages[index]
+    local variation = DEFAULT_LANGUAGE_VARIATIONS_BY_CODE[language]
+    result[index] = {
+      code = language,
+      name = language_display_name_for(languages, language),
+      aliases = variation and copy_array(variation.aliases or {}) or {},
+    }
+  end
+  return result
+end
+
+local function copy_language_variations(values)
+  local result = {}
+  for index = 1, #values do
+    local value = values[index]
+    result[index] = {
+      code = value.code,
+      name = value.name,
+      aliases = copy_array(value.aliases or {}),
+    }
+  end
+  return result
 end
 
 local function make_bundle(entries, languages, options)
@@ -258,6 +346,14 @@ local function make_bundle(entries, languages, options)
 
   function bundle:available_languages()
     return copy_array(self._languages)
+  end
+
+  function bundle:language_display_name(language)
+    return language_display_name_for(self._languages, language or self._language)
+  end
+
+  function bundle:language_variations()
+    return language_variations_for(self._languages)
   end
 
   function bundle:has(key, language)
@@ -308,8 +404,20 @@ function M.default_languages()
   return copy_array(DEFAULT_LANGUAGES)
 end
 
+function M.default_language_display_names()
+  return copy_map(DEFAULT_LANGUAGE_DISPLAY_NAMES)
+end
+
+function M.default_language_variations()
+  return copy_language_variations(DEFAULT_LANGUAGE_VARIATIONS)
+end
+
 function M.normalize_language(language, languages)
   return normalize_language_for(languages or DEFAULT_LANGUAGES, language)
+end
+
+function M.language_display_name(language, languages)
+  return language_display_name_for(languages or DEFAULT_LANGUAGES, language)
 end
 
 function M.parse_csv(text)

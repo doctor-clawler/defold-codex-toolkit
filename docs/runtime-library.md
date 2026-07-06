@@ -71,6 +71,16 @@ Use `localization.default_languages()` when a project needs the shared default t
 ko-KR, en, ja-JP, zh-CN, zh-TW, de-DE, fr-FR, es-419, es-ES, pt-BR, it-IT, ru-RU, tr-TR, pl-PL, th, id, vi, ar, hi-IN, nl-NL
 ```
 
+Language selector UI should use fixed native language names, not the currently selected language's translation table. `localization.default_language_variations()` returns selector-ready records in the same order, with `code`, fixed native `name`, and legacy `aliases`. `localization.language_display_name("ko")` returns `한국어`, and `localization.language_display_name("ja")` returns `日本語`.
+
+```lua
+for _, language in ipairs(localization.default_language_variations()) do
+  print(language.code, language.name)
+end
+
+print(localization.language_display_name("ko"))
+```
+
 Short legacy codes such as `ko`, `ja`, `zh`, `de`, `fr`, `es`, `pt`, `it`, `ru`, `tr`, `pl`, `hi`, and `nl` normalize to the matching default locale only when that canonical locale column exists in the bundle. This keeps older `en,ko` tables working while allowing new tables to use canonical locale columns.
 
 ```csv
@@ -93,6 +103,7 @@ local bundle = localization.from_resource("/assets/localization.csv", {
 
 print(bundle:text("ui.greeting", { name = "Ada" }))
 print(bundle:text("ui.title", "ko"))
+print(bundle:language_display_name("ko"))
 ```
 
 The helper intentionally does not own a global language setting for the whole game. Keep save data, settings UI, and language switching policy in the consuming project.
