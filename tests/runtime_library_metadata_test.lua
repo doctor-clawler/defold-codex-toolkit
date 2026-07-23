@@ -29,6 +29,15 @@ local function run()
   assert.contains(docs, "scroll.update", "adoption docs should document inertial scroll updates")
   assert.contains(docs, "scroll.layout", "adoption docs should document reusable row layout")
   assert.contains(docs, "dependencies", "adoption docs should document Defold dependency configuration")
+
+  local conventions = read_file("skills/defold-project-conventions/SKILL.md")
+  assert.contains(conventions, "references/runtime-ai-qa.md", "project conventions should route built-product QA to its runtime contract")
+
+  local runtime_qa = read_file("skills/defold-project-conventions/references/runtime-ai-qa.md")
+  assert.contains(runtime_qa, "built Defold game", "runtime QA contract should target the built product")
+  assert.contains(runtime_qa, "same action/message path", "runtime QA input should use the real player path")
+  assert.contains(runtime_qa, "Release/Store bundle", "runtime QA contract should require release exclusion")
+  assert.contains(runtime_qa, "Computer Use", "runtime QA contract should preserve visual black-box checks")
 end
 
 return run

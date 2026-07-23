@@ -16,11 +16,15 @@
 - Defold 엔진 릴리즈 확인 및 `defold_helper` 정합성 업그레이드 가이드
 - Defold 프로젝트 컨벤션 점검 가이드
 - Defold 프로젝트가 dependency로 가져다 쓸 수 있는 `defold_helper/` Lua runtime helper
+- 빌드된 Debug/Development 제품을 AI가 직접 조작·관찰하기 위한 runtime QA bridge 설계 지침
 - CSV 기반 localization table helper 및 기본 20개 locale 코드/selector 이름 variation 목록
 - 재사용 가능한 privacy modal 상태/클릭 처리 helper
 - 재사용 가능한 bounded scroll 상태/드래그/휠/관성/탄성 layout helper
 
 각 항목은 `skills/` 하위 `SKILL.md`로 제공됩니다.
+빌드 제품 runtime QA 계약은
+[`skills/defold-project-conventions/references/runtime-ai-qa.md`](skills/defold-project-conventions/references/runtime-ai-qa.md)를
+기준으로 합니다.
 
 최신 Defold 문서 확인이 필요한 작업에서는 공식 LLM용 문서 인덱스인 `https://defold.com/llms.txt`를 우선 진입점으로 사용합니다.
 
@@ -64,6 +68,7 @@ skills/
   defold-debug-workflow/SKILL.md
   defold-engine-upgrade/SKILL.md
   defold-project-conventions/SKILL.md
+  defold-project-conventions/references/runtime-ai-qa.md
 examples/marketplace.json.example
 README.md
 LICENSE
