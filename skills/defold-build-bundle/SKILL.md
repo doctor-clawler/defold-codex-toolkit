@@ -24,6 +24,7 @@ Use this skill only for Defold build pipeline work. If the request is about game
 - keep build changes orthogonal to gameplay or GUI behavior
 - when adding automation, include clear path and artifact output expectations (`bundle`, `build`, `artifacts`, and related outputs)
 - prefer existing repo conventions for naming and directory layouts
+- when a playable ad or single-file HTML deliverable is requested, build a normal `wasm-web` bundle first and then use `tools/single_html/pack.mjs`; do not use a pthread-only bundle
 - when wiring Slack `/build`, prefer the shared contract below instead of inventing a project-specific command surface
 - when the running editor exposes `http://127.0.0.1:<PORT>/openapi.json`, inspect it before relying on hard-coded editor HTTP endpoint assumptions
 - for editor-resolved compile issues, run `curl -X POST "http://127.0.0.1:$(cat .internal/editor.port)/command/build"` and inspect the returned `success` and `issues`; do not treat this as a replacement for platform-specific bundle/export validation
@@ -63,3 +64,30 @@ Recommended composition:
 - the change set is minimal and scoped to build or bundle responsibilities
 - shared `/build` projects use the standard script paths so the daemon can discover them without per-project code
 - if the editor build endpoint is used, the reported result includes the JSON `success` value and any `issues`
+
+## Single-HTML HTML5 Bundles
+
+The toolkit repository includes `tools/single_html/pack.mjs` for converting an existing Defold `wasm-web` HTML5 bundle into one self-contained HTML file.
+
+Requirements and setup:
+
+- Node.js 18 or newer
+- Zstandard CLI 1.5 or newer
+- `npm install --prefix tools/single_html`
+
+Example:
+
+```bash
+node tools/single_html/pack.mjs \
+  "build/default-web/My Game" \
+  --output "build/MyGame.single.html"
+```
+
+Use `--compression none` only for debugging. The production default is Zstandard compression. Runtime downloads initiated by game code are not captured, so keep required resources in the Defold archive or the HTML template. Validate target-network size limits and SDK requirements separately from the packer's own self-contained-output checks.
+
+Single-HTML validation:
+
+- run `npm test --prefix tools/single_html`
+- confirm the source bundle uses `wasm-web`, not pthread-only WebAssembly
+- open the output through the intended delivery path and inspect browser console errors
+- verify gameplay input and any advertising SDK callbacks separately

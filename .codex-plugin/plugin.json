@@ -1,7 +1,7 @@
 {
   "name": "defold-codex-toolkit",
   "version": "0.5.1",
-  "description": "Defold-specific Codex workflow toolkit and reusable runtime library for build, UI/input, UI text/fonts, debugging, project conventions, engine upgrades, portable Lua score/session helpers, local leaderboards, CSV localization tables, and privacy modal routing.",
+  "description": "Defold-specific Codex workflow toolkit and reusable runtime library for build, single-file HTML5 packaging, UI/input, UI text/fonts, debugging, project conventions, engine upgrades, portable Lua score/session helpers, local leaderboards, CSV localization tables, and privacy modal routing.",
   "author": {
     "name": "clawler"
   },
@@ -17,7 +17,7 @@
   "interface": {
     "displayName": "Defold Codex Toolkit",
     "shortDescription": "Defold-only workflow skills for Codex",
-    "longDescription": "Provides narrowly scoped Defold workflow skills for builds, GUI and input work, UI text/font coverage, debugging, engine upgrades, and project convention checks, plus a Defold library namespace with portable Lua score, local leaderboard, result UI, session, localization, and privacy modal helpers.",
+    "longDescription": "Provides narrowly scoped Defold workflow skills for builds, single-file HTML5 packaging, GUI and input work, UI text/font coverage, debugging, engine upgrades, and project convention checks, plus a Defold library namespace with portable Lua score, local leaderboard, result UI, session, localization, and privacy modal helpers.",
     "developerName": "clawler",
     "category": "Coding",
     "capabilities": [
@@ -29,6 +29,7 @@
       "Check this Defold project against the latest engine release before upgrading",
       "Check this Defold HUD text for missing glyph or font coverage risks",
       "Check whether this Defold build or bundle setup matches the local project",
+      "Package this Defold wasm-web bundle as one self-contained HTML file",
       "Review this Defold project structure before editing gameplay or GUI code"
     ],
     "brandColor": "#0B7285",

@@ -16,6 +16,7 @@
 - Defold 엔진 릴리즈 확인 및 `defold_helper` 정합성 업그레이드 가이드
 - Defold 프로젝트 컨벤션 점검 가이드
 - Defold 프로젝트가 dependency로 가져다 쓸 수 있는 `defold_helper/` Lua runtime helper
+- Defold HTML5 bundle을 자체 포함 단일 HTML로 변환하는 `tools/single_html` packer
 - 빌드된 Debug/Development 제품을 AI가 직접 조작·관찰하기 위한 runtime QA bridge 설계 지침
 - CSV 기반 localization table helper 및 기본 20개 locale 코드/selector 이름 variation 목록
 - 재사용 가능한 privacy modal 상태/클릭 처리 helper
@@ -47,6 +48,22 @@
 
 이 계약을 따르면 새로운 Defold 프로젝트도 `_ops` 쪽에 프로젝트별 artifact branch를 추가하지 않고 같은 `/build` 표면을 재사용할 수 있습니다.
 
+## Single-HTML packer
+
+`tools/single_html/pack.mjs`는 이미 생성된 Defold `wasm-web` HTML5 bundle을 자체 포함 단일 HTML 파일로 변환합니다. WebAssembly 엔진, 생성된 엔진 JavaScript, archive 조각, loader, CSS와 로컬 미디어를 한 파일에 내장하므로 playable ad나 단일 파일 납품에 사용할 수 있습니다.
+
+Node.js 18 이상과 Zstandard CLI 1.5 이상이 필요합니다. JavaScript dependency는 한 번 설치합니다.
+
+```bash
+npm install --prefix tools/single_html
+
+node tools/single_html/pack.mjs \
+  "build/default-web/My Game" \
+  --output "build/MyGame.single.html"
+```
+
+기본 압축은 Zstandard이며, 테스트와 옵션 및 제한사항은 [`tools/single_html/README.md`](tools/single_html/README.md)에 정리되어 있습니다. `tools/`는 루트 `.defignore`로 Defold library dependency 결과에서 제외되므로 `defold_helper/` 런타임 패키지와 섞이지 않습니다.
+
 ## 디렉터리 구조 설명
 
 ```text
@@ -69,6 +86,11 @@ skills/
   defold-engine-upgrade/SKILL.md
   defold-project-conventions/SKILL.md
   defold-project-conventions/references/runtime-ai-qa.md
+tools/
+  single_html/
+    pack.mjs
+    package.json
+    test/pack.test.mjs
 examples/marketplace.json.example
 README.md
 LICENSE

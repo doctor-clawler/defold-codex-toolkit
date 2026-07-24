@@ -1,0 +1,17 @@
+{
+  "name": "defold-helpers-single-html",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Pack a Defold HTML5 bundle into one self-contained HTML file.",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "pack": "node pack.mjs",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "fzstd": "0.1.1"
+  }
+}
